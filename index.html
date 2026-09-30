@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AbsensiKu</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --bg:#07111f;
+  --card:#0d1b2e;
+  --card2:#10233b;
+  --border:#1b3553;
+  --primary:#3b82f6;
+  --primary2:#2563eb;
+  --text:#f8fafc;
+  --muted:#8fa3bb;
+  --green:#22c55e;
+  --red:#ef4444;
+  --yellow:#f59e0b;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(circle at 15% 10%,rgba(37,99,235,.16),transparent 30%),
+    radial-gradient(circle at 90% 90%,rgba(14,165,233,.10),transparent 30%),
+    var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+button,input,select,textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* ================= LOGIN ================= */
+
+#loginPage{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:25px;
+}
+
+.login-box{
+  width:100%;
+  max-width:420px;
+  background:rgba(13,27,46,.88);
+  border:1px solid var(--border);
+  border-radius:25px;
+  padding:34px 27px;
+  box-shadow:0 25px 70px rgba(0,0,0,.35);
+  backdrop-filter:blur(15px);
+}
+
+.logo-wrap{
+  display:flex;
+  justify-content:center;
+  margin-bottom:22px;
+}
+
+.logo{
+  width:72px;
+  height:72px;
+  border-radius:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  background:linear-gradient(145deg,#2563eb,#38bdf8);
+  box-shadow:0 12px 35px rgba(37,99,235,.35);
+  overflow:hidden;
+}
+
+.logo:before{
+  content:"";
+  position:absolute;
+  width:42px;
+  height:42px;
+  border:2px solid rgba(255,255,255,.2);
+  border-radius:50%;
+}
+
+.logo span{
+  font-size:34px;
+  font-weight:900;
+  color:white;
+  font-family:Arial,sans-serif;
+  position:relative;
+  z-index:2;
+}
+
+.login-title{
+  text-align:center;
+  font-size:29px;
+  font-weight:800;
+  letter-spacing:-.5px;
+}
+
+.login-subtitle{
+  text-align:center;
+  color:var(--muted);
+  margin-top:9px;
+  line-height:1.5;
+  font-size:14px;
+}
+
+.google-btn{
+  margin-top:28px;
+  width:100%;
+  height:54px;
+  border:none;
+  border-radius:14px;
+  background:white;
+  color:#1f2937;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  transition:.2s;
+}
+
+.google-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 8px 25px rgba(0,0,0,.25);
+}
+
+.google-icon{
+  width:21px;
+  height:21px;
+}
+
+.login-note{
+  text-align:center;
+  margin-top:19px;
+  color:#71859d;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.developer{
+  text-align:center;
+  color:#62768e;
+  font-size:11px;
+  margin-top:25px;
+}
+
+/* ================= APP ================= */
+
+#app{
+  min-height:100vh;
+}
+
+.topbar{
+  height:70px;
+  border-bottom:1px solid var(--border);
+  background:rgba(7,17,31,.85);
+  backdrop-filter:blur(15px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 22px;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.brand-logo{
+  width:38px;
+  height:38px;
+  border-radius:11px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(145deg,#2563eb,#38bdf8);
+  font-weight:900;
+  font-size:20px;
+  box-shadow:0 6px 18px rgba(37,99,235,.25);
+}
+
+.brand-name{
+  font-size:17px;
+  font-weight:800;
+}
+
+.logout{
+  border:1px solid var(--border);
+  background:#0d1b2e;
+  color:#dbeafe;
+  padding:9px 14px;
+  border-radius:10px;
+  font-size:13px;
+}
+
+.container{
+  width:100%;
+  max-width:1050px;
+  margin:auto;
+  padding:27px 18px 45px;
+}
+
+.welcome{
+  margin-bottom:22px;
+}
+
+.welcome h1{
+  font-size:27px;
+  margin-bottom:7px;
+}
+
+.welcome p{
+  color:var(--muted);
+  font-size:14px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.card{
+  background:rgba(13,27,46,.82);
+  border:1px solid var(--border);
+  border-radius:19px;
+  padding:21px;
+}
+
+.card.full{
+  grid-column:1/-1;
+}
+
+.card-title{
+  font-size:17px;
+  font-weight:800;
+  margin-bottom:17px;
+}
+
+.profile{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.avatar{
+  width:53px;
+  height:53px;
+  border-radius:16px;
+  background:linear-gradient(145deg,#2563eb,#38bdf8);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  font-weight:800;
+}
+
+.profile-name{
+  font-weight:700;
+  font-size:16px;
+}
+
+.profile-email{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+  word-break:break-word;
+}
+
+.role{
+  display:inline-block;
+  margin-top:7px;
+  padding:4px 8px;
+  border-radius:7px;
+  background:rgba(59,130,246,.12);
+  color:#60a5fa;
+  font-size:11px;
+}
+
+/* ================= FORM ================= */
+
+.form-group{
+  margin-bottom:14px;
+}
+
+label{
+  display:block;
+  color:#cbd5e1;
+  font-size:13px;
+  margin-bottom:7px;
+}
+
+input,select,textarea{
+  width:100%;
+  border:1px solid var(--border);
+  outline:none;
+  background:#09182a;
+  color:white;
+  border-radius:11px;
+  padding:12px 13px;
+}
+
+textarea{
+  min-height:105px;
+  resize:vertical;
+}
+
+input:focus,select:focus,textarea:focus{
+  border-color:#3b82f6;
+}
+
+.primary{
+  width:100%;
+  border:none;
+  border-radius:11px;
+  padding:12px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:white;
+  font-weight:700;
+}
+
+.primary:active{
+  transform:scale(.99);
+}
+
+/* ================= REQUEST ================= */
+
+.request{
+  border:1px solid var(--border);
+  background:#0a192b;
+  border-radius:14px;
+  padding:15px;
+  margin-bottom:10px;
+}
+
+.request:last-child{
+  margin-bottom:0;
+}
+
+.request-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.request-date{
+  font-weight:700;
+  font-size:14px;
+}
+
+.status{
+  font-size:11px;
+  padding:5px 8px;
+  border-radius:7px;
+  white-space:nowrap;
+}
+
+.status-menunggu{
+  background:rgba(245,158,11,.12);
+  color:#fbbf24;
+}
+
+.status-disetujui{
+  background:rgba(34,197,94,.12);
+  color:#4ade80;
+}
+
+.status-ditolak{
+  background:rgba(239,68,68,.12);
+  color:#f87171;
+}
+
+.request-info{
+  color:#9fb0c4;
+  font-size:12px;
+  line-height:1.6;
+  margin-top:9px;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+.approve,
+.reject{
+  border:none;
+  border-radius:8px;
+  padding:8px 12px;
+  color:white;
+  font-size:12px;
+  font-weight:700;
+}
+
+.approve{
+  background:#15803d;
+}
+
+.reject{
+  background:#b91c1c;
+}
+
+.empty{
+  text-align:center;
+  padding:22px;
+  color:#71859d;
+  font-size:13px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:700px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .card.full{
+    grid-column:auto;
+  }
+
+  .topbar{
+    padding:0 14px;
+  }
+
+  .container{
+    padding:22px 13px 40px;
+  }
+
+  .welcome h1{
+    font-size:23px;
+  }
+
+  .brand-name{
+    font-size:15px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+
+<section id="loginPage">
+
+  <div class="login-box">
+
+    <div class="logo-wrap">
+      <div class="logo">
+        <span>A</span>
+      </div>
+    </div>
+
+    <h1 class="login-title">AbsensiKu</h1>
+
+    <p class="login-subtitle">
+      Sistem pengajuan izin dan sakit siswa
+      yang simpel dan aman.
+    </p>
+
+    <button class="google-btn" id="googleLogin">
+
+      <!-- Google G -->
+      <svg class="google-icon" viewBox="0 0 24 24">
+        <path fill="#4285F4"
+          d="M21.35 12.27c0-.79-.07-1.55-.2-2.27H12v4.3h5.24a4.48 4.48 0 0 1-1.94 2.94v2.45h3.14c1.84-1.69 2.91-4.18 2.91-7.42z"/>
+        <path fill="#34A853"
+          d="M12 21.8c2.63 0 4.84-.87 6.45-2.35l-3.14-2.45c-.87.58-1.98.92-3.31.92-2.55 0-4.71-1.72-5.49-4.03H3.27v2.53A9.74 9.74 0 0 0 12 21.8z"/>
+        <path fill="#FBBC05"
+          d="M6.51 13.89A5.85 5.85 0 0 1 6.2 12c0-.66.11-1.3.31-1.89V7.58H3.27A9.75 9.75 0 0 0 2.25 12c0 1.57.38 3.05 1.02 4.42l3.24-2.53z"/>
+        <path fill="#EA4335"
+          d="M12 6.08c1.43 0 2.71.49 3.72 1.45l2.79-2.79C16.83 3.17 14.63 2.2 12 2.2a9.74 9.74 0 0 0-8.73 5.38l3.24 2.53C7.29 7.8 9.45 6.08 12 6.08z"/>
+      </svg>
+
+      Masuk dengan Google
+
+    </button>
+
+    <p class="login-note">
+      Gunakan akun Google yang terdaftar di sistem sekolah.
+    </p>
+
+    <div class="developer">
+      Developer: Robiyatul Giridarma
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= APP ================= -->
+
+<section id="app" class="hidden">
+
+  <header class="topbar">
+
+    <div class="brand">
+      <div class="brand-logo">A</div>
+      <div class="brand-name">AbsensiKu</div>
+    </div>
+
+    <button class="logout" id="logoutBtn">
+      Keluar
+    </button>
+
+  </header>
+
+
+  <main class="container">
+
+    <div class="welcome">
+      <h1 id="welcomeText">Halo 👋</h1>
+      <p id="welcomeSub">
+        Kelola pengajuan izinmu dengan mudah.
+      </p>
+    </div>
+
+
+    <div class="grid">
+
+      <!-- PROFILE -->
+
+      <div class="card">
+
+        <div class="card-title">
+          Profil
+        </div>
+
+        <div class="profile">
+
+          <div class="avatar" id="avatar">
+            A
+          </div>
+
+          <div>
+            <div class="profile-name" id="profileName">
+              Memuat...
+            </div>
+
+            <div class="profile-email" id="profileEmail">
+              -
+            </div>
+
+            <span class="role" id="profileRole">
+              siswa
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- FORM SISWA -->
+
+      <div class="card" id="studentFormCard">
+
+        <div class="card-title">
+          Ajukan Izin
+        </div>
+
+        <form id="leaveForm">
+
+          <div class="form-group">
+
+            <label>
+              Tanggal
+            </label>
+
+            <input
+              type="date"
+              id="tanggal"
+              required
+            >
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Jenis Izin
+            </label>
+
+            <select id="jenisIzin" required>
+
+              <option value="izin">
+                Izin
+              </option>
+
+              <option value="sakit">
+                Sakit
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Alasan
+            </label>
+
+            <textarea
+              id="alasan"
+              placeholder="Tulis alasan izin..."
+              required
+            ></textarea>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Link bukti (opsional)
+            </label>
+
+            <input
+              type="url"
+              id="bukti"
+              placeholder="https://..."
+            >
+
+          </div>
+
+
+          <button
+            class="primary"
+            type="submit"
+          >
+            Kirim Pengajuan
+          </button>
+
+        </form>
+
+      </div>
+
+
+      <!-- RIWAYAT SISWA -->
+
+      <div
+        class="card full"
+        id="studentHistoryCard"
+      >
+
+        <div class="card-title">
+          Riwayat Pengajuan
+        </div>
+
+        <div id="myRequests">
+          <div class="empty">
+            Memuat riwayat...
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- ADMIN -->
+
+      <div
+        class="card full hidden"
+        id="adminCard"
+      >
+
+        <div class="card-title">
+          Pengajuan Siswa
+        </div>
+
+        <div id="allRequests">
+
+          <div class="empty">
+            Memuat pengajuan...
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="developer">
+      Developer: Robiyatul Giridarma
+    </div>
+
+  </main>
+
+</section>
+
+
+<script>
+
+/* =====================================================
+   SUPABASE
+===================================================== */
+
+const SUPABASE_URL =
+  "https://fewntjdheojlmzdhfqxe.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_nuCKumyJsAZNcOE5PYqe5g_SfLki0da";
+
+const supabaseClient =
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+/* =====================================================
+   ELEMENT
+===================================================== */
+
+const loginPage =
+  document.getElementById("loginPage");
+
+const app =
+  document.getElementById("app");
+
+const googleLogin =
+  document.getElementById("googleLogin");
+
+const logoutBtn =
+  document.getElementById("logoutBtn");
+
+const leaveForm =
+  document.getElementById("leaveForm");
+
+
+/* =====================================================
+   GOOGLE LOGIN
+===================================================== */
+
+googleLogin.addEventListener(
+  "click",
+  async () => {
+
+    googleLogin.disabled = true;
+    googleLogin.innerText =
+      "Menghubungkan...";
+
+    const { error } =
+      await supabaseClient.auth.signInWithOAuth({
+
+        provider:"google",
+
+        options:{
+          redirectTo:
+            window.location.origin +
+            window.location.pathname
+        }
+
+      });
+
+    if(error){
+
+      alert(
+        "Login gagal: " +
+        error.message
+      );
+
+      googleLogin.disabled = false;
+
+      googleLogin.innerText =
+        "Masuk dengan Google";
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+logoutBtn.addEventListener(
+  "click",
+  async () => {
+
+    await supabaseClient.auth.signOut();
+
+    location.reload();
+
+  }
+);
+
+
+/* =====================================================
+   AUTH CHECK
+===================================================== */
+
+async function checkUser(){
+
+  const {
+    data:{
+      session
+    }
+  } =
+    await supabaseClient.auth.getSession();
+
+  if(session){
+
+    await showApp(session.user);
+
+  }else{
+
+    loginPage.classList.remove("hidden");
+
+    app.classList.add("hidden");
+
+  }
+
+}
+
+
+/* =====================================================
+   SHOW APP
+===================================================== */
+
+async function showApp(user){
+
+  loginPage.classList.add("hidden");
+
+  app.classList.remove("hidden");
+
+
+  const profile =
+    await getProfile(user);
+
+
+  if(!profile){
+
+    alert(
+      "Profil belum berhasil dibuat."
+    );
+
+    return;
+
+  }
+
+
+  const nama =
+    profile.nama ||
+    user.user_metadata?.full_name ||
+    "Siswa";
+
+
+  document.getElementById(
+    "welcomeText"
+  ).textContent =
+    "Halo, " + nama + " 👋";
+
+
+  document.getElementById(
+    "profileName"
+  ).textContent =
+    nama;
+
+
+  document.getElementById(
+    "profileEmail"
+  ).textContent =
+    user.email;
+
+
+  document.getElementById(
+    "profileRole"
+  ).textContent =
+    profile.role;
+
+
+  document.getElementById(
+    "avatar"
+  ).textContent =
+    nama.charAt(0).toUpperCase();
+
+
+  /* ADMIN */
+
+  if(
+    profile.role === "admin_utama" ||
+    profile.role === "admin_kelas" ||
+    profile.role === "wali_kelas"
+  ){
+
+    document
+      .getElementById("studentFormCard")
+      .classList.add("hidden");
+
+    document
+      .getElementById("studentHistoryCard")
+      .classList.add("hidden");
+
+    document
+      .getElementById("adminCard")
+      .classList.remove("hidden");
+
+    document.getElementById(
+      "welcomeSub"
+    ).textContent =
+      "Kelola pengajuan izin siswa.";
+
+    await loadAllRequests();
+
+  }else{
+
+    document
+      .getElementById("studentFormCard")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("studentHistoryCard")
+      .classList.remove("hidden");
+
+    document
+      .getElementById("adminCard")
+      .classList.add("hidden");
+
+    await loadMyRequests(user);
+
+  }
+
+}
+
+
+/* =====================================================
+   GET / CREATE PROFILE
+===================================================== */
+
+async function getProfile(user){
+
+  let {
+    data:profile,
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq("user_id",user.id)
+      .maybeSingle();
+
+
+  if(error){
+
+    console.error(error);
+
+    return null;
+
+  }
+
+
+  if(!profile){
+
+    const nama =
+      user.user_metadata?.full_name ||
+      user.user_metadata?.name ||
+      "Siswa";
+
+
+    const result =
+      await supabaseClient
+        .from("profiles")
+        .insert({
+
+          user_id:user.id,
+
+          email:user.email,
+
+          nama:nama,
+
+          role:"siswa"
+
+        })
+        .select()
+        .single();
+
+
+    if(result.error){
+
+      console.error(
+        result.error
+      );
+
+      return null;
+
+    }
+
+
+    profile =
+      result.data;
+
+  }
+
+
+  return profile;
+
+}
+
+
+/* =====================================================
+   SUBMIT IZIN
+===================================================== */
+
+leaveForm.addEventListener(
+  "submit",
+  async event => {
+
+    event.preventDefault();
+
+
+    const {
+      data:{
+        user
+      }
+    } =
+      await supabaseClient.auth.getUser();
+
+
+    if(!user){
+
+      alert(
+        "Sesi login sudah berakhir."
+      );
+
+      return;
+
+    }
+
+
+    const tanggal =
+      document.getElementById(
+        "tanggal"
+      ).value;
+
+
+    const jenis =
+      document.getElementById(
+        "jenisIzin"
+      ).value;
+
+
+    const alasan =
+      document.getElementById(
+        "alasan"
+      ).value.trim();
+
+
+    const bukti =
+      document.getElementById(
+        "bukti"
+      ).value.trim();
+
+
+    if(!tanggal || !alasan){
+
+      alert(
+        "Tanggal dan alasan wajib diisi."
+      );
+
+      return;
+
+    }
+
+
+    const button =
+      leaveForm.querySelector(
+        "button"
+      );
+
+
+    button.disabled = true;
+
+    button.textContent =
+      "Mengirim...";
+
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("leave_requests")
+        .insert({
+
+          siswa_id:user.id,
+
+          tanggal: tanggal,
+
+          alasan:
+            "[" +
+            jenis.toUpperCase() +
+            "] " +
+            alasan,
+
+          bukti:
+            bukti || null
+
+        });
+
+
+    button.disabled = false;
+
+    button.textContent =
+      "Kirim Pengajuan";
+
+
+    if(error){
+
+      alert(
+        "Gagal mengirim: " +
+        error.message
+      );
+
+      return;
+
+    }
+
+
+    alert(
+      "Pengajuan berhasil dikirim ✅"
+    );
+
+
+    leaveForm.reset();
+
+    await loadMyRequests(user);
+
+  }
+);
+
+
+/* =====================================================
+   LOAD MY REQUESTS
+===================================================== */
+
+async function loadMyRequests(user){
+
+  const box =
+    document.getElementById(
+      "myRequests"
+    );
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("leave_requests")
+      .select("*")
+      .eq("siswa_id",user.id)
+      .order(
+        "created_at",
+        {ascending:false}
+      );
+
+
+  if(error){
+
+    box.innerHTML =
+      `<div class="empty">
+        Gagal memuat data.
+      </div>`;
+
+    console.error(error);
+
+    return;
+
+  }
+
+
+  if(!data || data.length === 0){
+
+    box.innerHTML =
+      `<div class="empty">
+        Belum ada pengajuan izin.
+      </div>`;
+
+    return;
+
+  }
+
+
+  box.innerHTML =
+    data.map(
+      item => requestHTML(item)
+    ).join("");
+
+}
+
+
+/* =====================================================
+   LOAD ADMIN
+===================================================== */
+
+async function loadAllRequests(){
+
+  const box =
+    document.getElementById(
+      "allRequests"
+    );
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("leave_requests")
+      .select("*")
+      .order(
+        "created_at",
+        {ascending:false}
+      );
+
+
+  if(error){
+
+    box.innerHTML =
+      `<div class="empty">
+        Gagal memuat pengajuan.
+      </div>`;
+
+    console.error(error);
+
+    return;
+
+  }
+
+
+  if(!data || data.length === 0){
+
+    box.innerHTML =
+      `<div class="empty">
+        Belum ada pengajuan siswa.
+      </div>`;
+
+    return;
+
+  }
+
+
+  box.innerHTML =
+    data.map(
+      item =>
+        requestHTML(
+          item,
+          true
+        )
+    ).join("");
+
+}
+
+
+/* =====================================================
+   REQUEST HTML
+===================================================== */
+
+function requestHTML(
+  item,
+  admin=false
+){
+
+  const status =
+    item.status || "menunggu";
+
+
+  let statusClass =
+    "status-menunggu";
+
+
+  if(status === "disetujui")
+    statusClass =
+      "status-disetujui";
+
+
+  if(status === "ditolak")
+    statusClass =
+      "status-ditolak";
+
+
+  const alasan =
+    item.alasan || "-";
+
+
+  let actions = "";
+
+
+  if(
+    admin &&
+    status === "menunggu"
+  ){
+
+    actions = `
+
+      <div class="actions">
+
+        <button
+          class="approve"
+          onclick="updateStatus('${item.id}','disetujui')"
+        >
+          ✓ Setujui
+        </button>
+
+        <button
+          class="reject"
+          onclick="updateStatus('${item.id}','ditolak')"
+        >
+          ✕ Tolak
+        </button>
+
+      </div>
+
+    `;
+
+  }
+
+
+  return `
+
+    <div class="request">
+
+      <div class="request-head">
+
+        <div class="request-date">
+          ${formatDate(item.tanggal)}
+        </div>
+
+        <span
+          class="status ${statusClass}"
+        >
+          ${status.toUpperCase()}
+        </span>
+
+      </div>
+
+
+      <div class="request-info">
+
+        ${admin
+          ? "ID Siswa: " +
+            item.siswa_id +
+            "<br>"
+          : ""
+        }
+
+        ${escapeHTML(alasan)}
+
+        ${
+          item.bukti
+          ? `<br>
+             <a
+               href="${escapeAttribute(item.bukti)}"
+               target="_blank"
+               style="color:#60a5fa"
+             >
+               Lihat bukti
+             </a>`
+          : ""
+        }
+
+      </div>
+
+
+      ${actions}
+
+    </div>
+
+  `;
+
+}
+
+
+/* =====================================================
+   UPDATE STATUS
+===================================================== */
+
+async function updateStatus(
+  id,
+  status
+){
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("leave_requests")
+      .update({
+        status:status
+      })
+      .eq("id",id);
+
+
+  if(error){
+
+    alert(
+      "Gagal mengubah status: " +
+      error.message
+    );
+
+    return;
+
+  }
+
+
+  await loadAllRequests();
+
+}
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+function formatDate(date){
+
+  if(!date)
+    return "-";
+
+
+  const d =
+    new Date(
+      date + "T00:00:00"
+    );
+
+
+  return d.toLocaleDateString(
+    "id-ID",
+    {
+      weekday:"long",
+      year:"numeric",
+      month:"long",
+      day:"numeric"
+    }
+  );
+
+}
+
+
+function escapeHTML(text){
+
+  return String(text)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+function escapeAttribute(text){
+
+  return String(text)
+    .replaceAll('"',"&quot;")
+    .replaceAll("<","%3C")
+    .replaceAll(">","%3E");
+
+}
+
+
+/* =====================================================
+   AUTH STATE
+===================================================== */
+
+supabaseClient.auth.onAuthStateChange(
+  async (event,session) => {
+
+    if(session){
+
+      await showApp(
+        session.user
+      );
+
+    }else{
+
+      loginPage.classList.remove(
+        "hidden"
+      );
+
+      app.classList.add(
+        "hidden"
+      );
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   START
+===================================================== */
+
+checkUser();
+
+</script>
+
+</body>
+</html>
